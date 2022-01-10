@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<title>Pochammail</title>
+<script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb.js"></script>
+    </head>
+    <body>
+        <h1>Sign Up</h1>
+<label for="email">Email</label>
+<input type="text" name="email" id="email"></input><br><br>
+<label for="pass">Password</label>
+<input type="text" name="pass" id="pass"></input><br><br>
+<button onclick="signUp()">Sign Up</button><br><br><br>
+<h1>Sign In</h1>
+<label for="email2">Email</label>
+<input type="text" name="email2" id="email2"></input><br><br>
+<label for="pass2">Password</label>
+<input type="text" name="pass2" id="pass2"></input><br><br>
+<button onclick="signIn()">Sign In</button>
+    </body>   
+    <script>
+        var faunadb = window.faunadb
+  var q = faunadb.query
+  var client = new faunadb.Client({
+    secret: 'fnAEcmT1NOAAwMSuxjcWT8-SCOuUFgcBPLWlR85A',
+    domain: 'db.eu.fauna.com',
+    scheme: 'https',
+  })
+
+        function signUp(){
+            client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), document.getElementById("email").value)
+  )
+)
+.then(function(ret){ 
+     
+alert("This email is taken!")
+
+})
+  
+.catch(function(e){
+
+
+
+  let date = new Date();
+    client.query(
+  q.Create(
+    q.Collection('pochammail'),
+    { data: { email: document.getElementById("email").value.replace(/\s/g, "-"),  password:  document.getElementById("pass").value,  sent_emails: [], recieved_emails: []} },
+  )
+)
+.then(function(ret){
+
+     console.log(ret)
+     window.location.href = "file:///C:/Users/guypa/Downloads/Pochammail/email.html?inbox=" + ret.data.email
+    })
+
+});
+
+
+        }
+
+        function signIn(){
+
+            client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), document.getElementById("email2").value)
+  )
+)
+      
+.then(function(ret) {
+                      
+  if(ret.data.password != document.getElementById("pass2").value)  
+  {
+    alert("User and password do not match!")
+  }
+  else{
+   
+    window.location.href = "file:///C:/Users/guypa/Downloads/Pochammail/email.html?inbox=" + ret.data.email
+  }
+})
+.catch(function(e){
+  alert("User not found.")
+});
+
+        }
+    </script>
+</html>
