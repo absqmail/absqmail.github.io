@@ -53,7 +53,7 @@ alert("This email is taken!")
 .then(function(ret){
 
      console.log(ret)
-     window.location.href = "file:///C:/Users/guypa/Downloads/Pochammail/email.html?inbox=" + ret.data.email
+     window.location.href = "https://pochammail.github.io/email?inbox=" + ret.data.email
     })
 
 });
@@ -77,7 +77,7 @@ alert("This email is taken!")
   }
   else{
    
-    window.location.href = "file:///C:/Users/guypa/Downloads/Pochammail/email.html?inbox=" + ret.data.email
+    window.location.href = "https://pochammail.github.io/email?inbox=" + ret.data.email
   }
 })
 .catch(function(e){
