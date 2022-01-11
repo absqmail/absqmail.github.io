@@ -2,6 +2,7 @@
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <title>Pochammail</title>
 <script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb.js"></script>
     </head>
@@ -18,6 +19,7 @@
   width: 50%;
   height: 200px;
   float: left;
+  padding-bottom: 50px;
 }
 
 .alert {
@@ -43,6 +45,7 @@ img {
 .two {
   margin-left: 50%;
   height: 200px;
+  padding-bottom: 50px;
 }
 
 article {
@@ -67,33 +70,102 @@ article {
   transition: 0.3s;
 }
 
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #262626;
+  padding-top: 50px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: none;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.container {
+  padding: 16px;
+}
+
 
 .closebtn:hover {
-  color: #cccccc;
+  color: #f44336;
+}
+
+
+
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close:hover {
+  color: #f44336;
 }
 
     </style>
     <body style="background-color: #262626;" onload="security()">
-        <button onclick="logOut()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #f44336;">Log Out</button>
+      
+      <button onclick="logOut()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #f44336;">Log Out</button>
+        <div id="id01" class="modal">
+          <span onclick="document.getElementById('id01').style.display='none'" class="close"><i class="fas fa-times"></i></span>
+          <div class="modal-content">
+            <div class="container">
+              <article>
+                <div style="text-align: center;">
+                <p style="text-align: center; font-size:17px" id="modalsender"></p>
+                <label id="modaltitle" style="font-size:24px"></label><br><br>
+                <label style="font-size: 19px;" id="modalcontent"></label><br><br>
+                <p style="text-align: center; font-size:15px" id="modaltime"></p>
+              </article>
+              </div>
+            </div>
+          </div>
+        </div>
         <div style="text-align: center;">
             <br><div id="success" style="display:none" class="alert">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
                 <strong>Success!</strong> <label>Your mail has been sent.</label>
               </div><br>
-        <h1>Send Mail</h1>
+              <h1>Send Mail</h1>
 
-<div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem;">
-    <label style="color: #cccccc;"><i>To send mail, fill out the details below.</i></label><br><br>
-    <label style="font-size: 18px;">Recipient</label><br>
-    <input id="reciever" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
-    <label style="font-size: 18px;">Title</label><br>
-    <input id="title" type="text" placeholder="Hello!" style="border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%"><br><br>
-    <label style="font-size: 18px;">Content</label><br>
-    <textarea id="content" type="text" placeholder="All HTML is supported." style="border: none; margin-left: 10px; height: 70px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:70%; font-family: 'Red Hat Text'; resize: vertical;"></textarea><br><br>
-    <button onclick="sendMail()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Send!</button>
-    </div>
-    <br><br><br>
-    <button onclick="getEmails()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Refresh Inbox</button>
+              <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem;">
+                  <label style="color: #cccccc;"><i>To send mail, fill out the details below.</i></label><br><br>
+                  <label style="font-size: 18px;">Recipient</label><br>
+                  <input id="reciever" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                  <label style="font-size: 18px;">Title</label><br>
+                  <input id="title" type="text" placeholder="Hello!" style="border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%"><br><br>
+                  <label style="font-size: 18px;">Content</label><br>
+                  <textarea id="content" type="text" placeholder="All HTML is supported." style="border: none; margin-left: 10px; height: 70px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:70%; font-family: 'Red Hat Text'; resize: vertical;"></textarea><br><br>
+                  <button onclick="sendMail()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Send!</button>
+                  </div>
+
+                  <br><br>
+                  <h1>Favourites</h1>
+                  <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem;">
+                    <label style="color: #cccccc;"><i>Add or remove an email to your favourites list. Favourited users emails will be highlighted.</i></label><br><br>
+                    <label style="font-size: 18px;">Email</label><br>
+                    <input id="friend" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                    <button onclick="addFriend()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Add!</button><br><br>
+                    <label style="font-size: 18px;">Email</label><br>
+                    <input id="friend2" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                    <button onclick="removeFriend()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Remove!</button>
+                    </div>
+                    <br><br><br>
+    <button onclick="getEmails()" style="border: none; border-radius: 5px; cursor: pointer; height: 45px; font-size: 18px; padding-left: 20px; padding-right: 20px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;"><i style="margin-right: 5px;" class="fas fa-redo-alt"></i>Refresh Inbox</button>
 
 </div>
 <div style="text-align: center;">
@@ -106,6 +178,12 @@ article {
         <label id="mymails"></label>
         </div>
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </body>   
     <script>
         var faunadb = window.faunadb
@@ -127,18 +205,37 @@ article {
 )
 .then(function(ret){ 
      let mail = ""
+     let favourites = ret.data.favourites
      ret.data.recieved_emails.reverse()
     for (let i = 0; i < ret.data.recieved_emails.length; i++) {
-        //mail = mail + "Mail from " + ret.data.recieved_emails[i].sender + "@poch.mail<br>Title: " + ret.data.recieved_emails[i].title + "<br>Content: " + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br>"
-        mail = mail + "<article><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "</article><br><br>"
-    }
+      if(favourites.findIndex(mail => mail.name === ret.data.recieved_emails[i].sender) != -1)
+      {
+        mail = mail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@poch.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p></article>"
+
+      }
+      else{
+        mail = mail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p></article>"
+      }
+      }
+
 
     document.getElementById("emails").innerHTML = mail
 
     let sentmail = ""
     ret.data.sent_emails.reverse()
     for (let i = 0; i < ret.data.sent_emails.length; i++) {
-        sentmail = sentmail + "<article><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "</article><br><br>"
+
+      if(favourites.findIndex(mail => mail.name === ret.data.sent_emails[i].reciever) != -1)
+      {
+        sentmail = sentmail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p></article>"
+
+      }
+      else{
+        sentmail = sentmail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p></article>"
+      }
+
+
+        //sentmail = sentmail + "<article><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "</article><br><br>"
     }
 
     document.getElementById("mymails").innerHTML = sentmail
@@ -155,7 +252,23 @@ article {
 
         }
 
+
+        function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
+}
+
+
         function sendMail(){
+
+          let date = new Date();
+          let id = makeid(6)
             client.query(
   q.Get(
     q.Match(q.Index('data_from_mail'), document.getElementById("reciever").value)
@@ -163,7 +276,7 @@ article {
 )
 .then(function(ret){ 
     let emails = ret.data.recieved_emails
-    emails.push({title: document.getElementById("title").value, sender: window.location.href.split("?inbox=")[1], content: document.getElementById("content").value.replace(/\n/g, "<br>")})
+    emails.push({title: document.getElementById("title").value, sender: window.location.href.split("?inbox=")[1], content: document.getElementById("content").value.replace(/\n/g, "<br>"), id: id, time: date.toUTCString()})
     console.log(emails)
 
     client.query(
@@ -189,7 +302,7 @@ client.query(
 
     let sentemails = ret.data.sent_emails
 console.log(sentemails)
-    sentemails.push({title: document.getElementById("title").value, reciever: document.getElementById("reciever").value, content: document.getElementById("content").value.replace(/\n/g, "<br>")})
+    sentemails.push({title: document.getElementById("title").value, reciever: document.getElementById("reciever").value, content: document.getElementById("content").value.replace(/\n/g, "<br>"), id: id, time: date.toUTCString()})
     console.log(sentemails)
     client.query(
           q.Update(q.Ref(q.Collection("pochammail"), ret.ref.value.id), {
@@ -237,7 +350,7 @@ console.log(sentemails)
   )
 )
 .then(function(ret){ 
-    let password = prompt("Please enter your password again (this allows for multi-client browser)", "Enter a password");
+    let password = prompt("Please enter your password again to gain access to your inbox.", "");
     if(ret.data.password != password)
     {
         history.back()
@@ -251,6 +364,155 @@ console.log(sentemails)
 });
 
 getEmails();
+        }
+
+        function addFriend(){
+
+          
+
+
+client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), window.location.href.split("?inbox=")[1])
+  )
+)
+.then(function(ret){ 
+
+    let fav = ret.data.favourites
+    fav.push({name: document.getElementById("friend").value})
+    console.log(fav)
+    client.query(
+          q.Update(q.Ref(q.Collection("pochammail"), ret.ref.value.id), {
+            data: {
+                favourites:  fav,
+            },
+          })
+        );
+
+        
+
+})
+.catch(function(e){
+
+    alert("error")
+    console.log(e)
+
+});
+
+
+        }
+
+
+        function fullViewRecieve(id){
+console.log(id)
+          client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), window.location.href.split("?inbox=")[1])
+  )
+)
+.then(function(ret){ 
+  let emails = ret.data.recieved_emails
+  console.log(id.id)
+var pos = emails.findIndex(mail => mail.id === id.id)
+  console.log(ret.data.recieved_emails[pos])
+  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.recieved_emails[pos].sender + "@poch.mail</b>"
+  document.getElementById('modaltitle').innerHTML = "<u>" + ret.data.recieved_emails[pos].title + "</u>"
+  document.getElementById('modaltime').innerHTML = "<i>" + ret.data.recieved_emails[pos].time + "</i>"
+  document.getElementById('modalcontent').innerHTML = ret.data.recieved_emails[pos].content.replace(/\n/g, "<br>")
+  var modal = document.getElementById('id01');
+  document.getElementById('id01').style.display='block'
+
+  window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+})
+  
+.catch(function(e){
+
+    console.log(e)
+
+});
+
+        }
+
+
+        function fullViewSender(id){
+console.log(id)
+          client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), window.location.href.split("?inbox=")[1])
+  )
+)
+.then(function(ret){ 
+  let emails = ret.data.sent_emails
+  console.log(id.id)
+var pos = emails.findIndex(mail => mail.id === id.id)
+  console.log(ret.data.recieved_emails[pos])
+  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.sent_emails[pos].reciever + "@poch.mail</b>"
+  document.getElementById('modaltitle').innerHTML = "<u>" + ret.data.sent_emails[pos].title + "</u>"
+  document.getElementById('modaltime').innerHTML = "<i>" + ret.data.sent_emails[pos].time + "</i>"
+  document.getElementById('modalcontent').innerHTML = ret.data.sent_emails[pos].content.replace(/\n/g, "<br>")
+  var modal = document.getElementById('id01');
+  document.getElementById('id01').style.display='block'
+
+  window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+})
+  
+.catch(function(e){
+
+    console.log(e)
+
+});
+
+        }
+
+
+        function removeFriend(){
+
+          
+
+
+client.query(
+  q.Get(
+    q.Match(q.Index('data_from_mail'), window.location.href.split("?inbox=")[1])
+  )
+)
+.then(function(ret){ 
+
+    let fav = ret.data.favourites
+    var index = fav.findIndex(friend => friend.name === document.getElementById("friend2").value);
+    console.log(index)
+if (index > -1) {
+  fav.splice(index, 1);
+}
+    console.log(fav)
+    client.query(
+          q.Update(q.Ref(q.Collection("pochammail"), ret.ref.value.id), {
+            data: {
+                favourites:  fav,
+            },
+          })
+        );
+
+        
+
+})
+.catch(function(e){
+
+    alert("error")
+    console.log(e)
+
+});
+
+
         }
 
        
