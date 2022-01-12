@@ -3,7 +3,7 @@
     <head>
         <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<title>Pochammail</title>
+<title>AbsqMail</title>
 <script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb.js"></script>
     </head>
     <style>
@@ -50,6 +50,17 @@ img {
 
 article {
   max-width: 60%;
+  margin: 0 auto;
+  padding: 1.5rem;
+  overflow-wrap: break-word;
+  background-color: #313131;
+  border-radius: 20px;
+  overflow:hidden;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.a {
+  max-width: 40%;
   margin: 0 auto;
   padding: 1.5rem;
   overflow-wrap: break-word;
@@ -145,7 +156,7 @@ article {
               <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem;">
                   <label style="color: #cccccc;"><i>To send mail, fill out the details below.</i></label><br><br>
                   <label style="font-size: 18px;">Recipient</label><br>
-                  <input id="reciever" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                  <input id="reciever" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@absq.mail</label><br><br>
                   <label style="font-size: 18px;">Title</label><br>
                   <input id="title" type="text" placeholder="Hello!" style="border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%"><br><br>
                   <label style="font-size: 18px;">Content</label><br>
@@ -158,10 +169,10 @@ article {
                   <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem;">
                     <label style="color: #cccccc;"><i>Add or remove an email to your favourites list. Favourited users emails will be highlighted.</i></label><br><br>
                     <label style="font-size: 18px;">Email</label><br>
-                    <input id="friend" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                    <input id="friend" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@absq.mail</label><br><br>
                     <button onclick="addFriend()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Add!</button><br><br>
                     <label style="font-size: 18px;">Email</label><br>
-                    <input id="friend2" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+                    <input id="friend2" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@absq.mail</label><br><br>
                     <button onclick="removeFriend()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Remove!</button>
                     </div>
                     <br><br><br>
@@ -196,25 +207,53 @@ article {
 
 
 
-
-        function getEmails(){
+       async function getEmails(){
             client.query(
   q.Get(
     q.Match(q.Index('data_from_mail'), window.location.href.split("?inbox=")[1])
   )
 )
-.then(function(ret){ 
+.then(async function(ret){ 
      let mail = ""
+     let replies = ""
      let favourites = ret.data.favourites
      ret.data.recieved_emails.reverse()
     for (let i = 0; i < ret.data.recieved_emails.length; i++) {
+replies = ""
       if(favourites.findIndex(mail => mail.name === ret.data.recieved_emails[i].sender) != -1)
       {
-        mail = mail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@poch.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p></article>"
+
+        var response = await fetch("https://api.absq.repl.co/replies?id=" + ret.data.recieved_emails[i].id) //EXTERNAL API JUST TO GET REPLIES UBHWGRUHEFWUWEFUWEFUHWF
+        const data = await response.json()
+        for (let i = 0; i < data.replies.length; i++) {
+          if(data.replies[i].email.replace(/@absq.mail/g, "") == window.location.href.split("?inbox=")[1])
+          {
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div style=\"border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131\" class=\"a\"><p>Reply from <b>" + "you" + "</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+
+          }
+          else{
+           
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div style=\"border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131\" class=\"a\"><p>Reply from <b>" + data.replies[i].email + "</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+          }
+          } 
+        mail = mail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@absq.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p><br><input id=\"textbox-" + ret.data.recieved_emails[i].id + "\" type=\"text\" placeholder=\"Write a comment...\" style=\"border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%\"><br><br><button id=\"" + "replies-" + ret.data.recieved_emails[i].id + "\" onclick=\"addMessage(this)\" style=\"border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;\">Post!</button></article>" + replies + "<br>"
 
       }
       else{
-        mail = mail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p></article>"
+
+        var response = await fetch("https://api.absq.repl.co/replies?id=" + ret.data.recieved_emails[i].id) //EXTERNAL API JUST TO GET REPLIES UBHWGRUHEFWUWEFUWEFUHWF
+        const data = await response.json()
+        for (let i = 0; i < data.replies.length; i++) {
+          if(data.replies[i].email.replace(/@absq.mail/g, "") == window.location.href.split("?inbox=")[1])
+          {
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div class=\"a\"><p>Reply from <b>" + "you" + "</b></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+          }
+          else{
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div class=\"a\"><p>Reply from <b>" + data.replies[i].email + "</b></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+
+          }
+          } 
+        mail = mail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.recieved_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewRecieve(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail from <b>" + ret.data.recieved_emails[i].sender + "@absq.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.recieved_emails[i].title + "</u></label><br><br>" + ret.data.recieved_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.recieved_emails[i].time + "</i></p><br><input id=\"textbox-" + ret.data.recieved_emails[i].id + "\" type=\"text\" placeholder=\"Write a comment...\" style=\"border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%\"><br><br><button id=\"" + "replies-" + ret.data.recieved_emails[i].id + "\" onclick=\"addMessage(this)\" style=\"border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;\">Post!</button></article>" + replies + "<br>"
       }
       }
 
@@ -222,16 +261,45 @@ article {
     document.getElementById("emails").innerHTML = mail
 
     let sentmail = ""
+    replies = ""
     ret.data.sent_emails.reverse()
     for (let i = 0; i < ret.data.sent_emails.length; i++) {
 
       if(favourites.findIndex(mail => mail.name === ret.data.sent_emails[i].reciever) != -1)
       {
-        sentmail = sentmail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p></article>"
+        
+        var response = await fetch("https://api.absq.repl.co/replies?id=" + ret.data.sent_emails[i].id) //EXTERNAL API JUST TO GET REPLIES UBHWGRUHEFWUWEFUWEFUHWF
+        const data = await response.json()
+        for (let i = 0; i < data.replies.length; i++) {
+          if(data.replies[i].email.replace(/@absq.mail/g, "") == window.location.href.split("?inbox=")[1])
+          {
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div style=\"border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131\" class=\"a\"><p>Reply from <b>" + "you" + "</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+          }
+          else{
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div style=\"border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131\" class=\"a\"><p>Reply from <b>" + data.replies[i].email + "</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+
+          }
+          } 
+        
+        sentmail = sentmail + "<article style=\"margin-bottom: 30px; border-style: solid; border-left-width: 5px; border-right-width: 5px; border-left-color: #FFD700; border-right-color: #FFD700; border-top-color: #313131; border-bottom-color: #313131;\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@absq.mail</b><i style=\"margin-left:5px; color:#FFD700\" class=\"fas fa-star\"></i></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p><br><input id=\"textbox-" + ret.data.sent_emails[i].id + "\" type=\"text\" placeholder=\"Write a comment...\" style=\"border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%\"><br><br><button id=\"" + "replies-" + ret.data.sent_emails[i].id + "\" onclick=\"addMessage(this)\" style=\"border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;\">Post!</button></article>" + replies + "<br>"
 
       }
       else{
-        sentmail = sentmail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\"><i class=\"fas fa-times\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@poch.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p></article>"
+
+        var response = await fetch("https://api.absq.repl.co/replies?id=" + ret.data.sent_emails[i].id) //EXTERNAL API JUST TO GET REPLIES UBHWGRUHEFWUWEFUWEFUHWF
+        const data = await response.json()
+        for (let i = 0; i < data.replies.length; i++) {
+          if(data.replies[i].email.replace(/@absq.mail/g, "") == window.location.href.split("?inbox=")[1])
+          {
+
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div class=\"a\"><p>Reply from <b>" + "you" + "</b></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+          }
+          else{
+            replies = replies + "<i class=\"fas fa-arrow-down\"></i><br><br><div class=\"a\"><p>Reply from <b>" + data.replies[i].email + "</b></p>" + data.replies[i].content + "<p style=\"font-size:13px\"><i>" + data.replies[i].time + "</i></p></div><br>"
+
+          }
+          } 
+        sentmail = sentmail + "<article style=\"margin-bottom: 30px\"><span id=\"" + ret.data.sent_emails[i].id + "\" class=\"closebtn\" onclick=\"fullViewSender(this)\"><i class=\"fas fa-sign-out-alt\"></i></span><br><p style=\"text-align: center; font-size:15px\">Mail to <b>" + ret.data.sent_emails[i].reciever + "@absq.mail</b></p><label style=\"font-size:22px\"><u>" + ret.data.sent_emails[i].title + "</u></label><br><br>" + ret.data.sent_emails[i].content.replace(/\n/g, "<br>") + "<br><br><p style=\"font-size:13px\"><i>" + ret.data.sent_emails[i].time + "</i></p><br><input id=\"textbox-" + ret.data.sent_emails[i].id + "\" type=\"text\" placeholder=\"Write a comment...\" style=\"border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%\"><br><br><button id=\"" + "replies-" + ret.data.sent_emails[i].id + "\" onclick=\"addMessage(this)\" style=\"border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;\">Post!</button></article>" + replies + "<br>"
       }
 
 
@@ -326,6 +394,23 @@ console.log(sentemails)
 
 
 
+client.query(
+  q.Create(
+    q.Collection('pochammail'),
+    { data: { id: "replies-" + id, replies: []} },
+  )
+)
+.then(function(ret){
+
+     console.log(ret)
+    })
+
+
+
+
+
+
+getEmails()
 
 })
 
@@ -339,7 +424,7 @@ console.log(sentemails)
         }
 
         function logOut(){
-            window.location.href = "https://pochammail.github.io"
+            window.location.href = "https://absqmail.github.io"
         }
 
         function security(){
@@ -389,7 +474,7 @@ client.query(
           })
         );
 
-        
+       getEmails() 
 
 })
 .catch(function(e){
@@ -415,7 +500,7 @@ console.log(id)
   console.log(id.id)
 var pos = emails.findIndex(mail => mail.id === id.id)
   console.log(ret.data.recieved_emails[pos])
-  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.recieved_emails[pos].sender + "@poch.mail</b>"
+  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.recieved_emails[pos].sender + "@absq.mail</b>"
   document.getElementById('modaltitle').innerHTML = "<u>" + ret.data.recieved_emails[pos].title + "</u>"
   document.getElementById('modaltime').innerHTML = "<i>" + ret.data.recieved_emails[pos].time + "</i>"
   document.getElementById('modalcontent').innerHTML = ret.data.recieved_emails[pos].content.replace(/\n/g, "<br>")
@@ -451,7 +536,7 @@ console.log(id)
   console.log(id.id)
 var pos = emails.findIndex(mail => mail.id === id.id)
   console.log(ret.data.recieved_emails[pos])
-  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.sent_emails[pos].reciever + "@poch.mail</b>"
+  document.getElementById('modalsender').innerHTML = "Mail from <b>" + ret.data.sent_emails[pos].reciever + "@absq.mail</b>"
   document.getElementById('modaltitle').innerHTML = "<u>" + ret.data.sent_emails[pos].title + "</u>"
   document.getElementById('modaltime').innerHTML = "<i>" + ret.data.sent_emails[pos].time + "</i>"
   document.getElementById('modalcontent').innerHTML = ret.data.sent_emails[pos].content.replace(/\n/g, "<br>")
@@ -510,6 +595,46 @@ if (index > -1) {
     alert("error")
     console.log(e)
 
+});
+
+
+}
+
+function addMessage(id){
+
+
+client.query(
+q.Get(
+  q.Match(q.Index('get_reply_post'), id.id)
+)
+)
+    
+.then(function(ret) {
+                    
+console.log(ret)
+
+
+let date = new Date();
+let replies = ret.data.replies
+    replies.push({email: window.location.href.split("?inbox=")[1], content: document.getElementById(id.id.replace(/replies/g, "textbox")).value.replace(/\n/g, "<br>"), time: date.toUTCString()})
+    console.log(emails)
+
+    client.query(
+  q.Update(
+    q.Ref(q.Collection('pochammail'), ret.ref.value.id),
+    {
+      data: {
+        replies: replies
+      },
+    },
+  )
+)
+
+getEmails()
+
+})
+.catch(function(e){
+alert("User not found.")
 });
 
 
