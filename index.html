@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-<title>Pochammail</title>
+<title>AbsqMail</title>
 <script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text" rel="stylesheet">
     </head>
@@ -31,7 +31,7 @@
 <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem; text-align: center;">
     <label style="color: #cccccc;"><i>To sign up, fill out the details below.</i></label><br><br>
     <label style="font-size: 18px;">Email</label><br>
-    <input id="email" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+    <input id="email" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@absq.mail</label><br><br>
     <label style="font-size: 18px;">Password</label><br>
     <input id="pass" type="password" placeholder="Password" style="border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%"><br><br>
     <button onclick="signUp()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Sign Up</button>
@@ -43,7 +43,7 @@
 <div style="background-color: #313131; border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 35%; margin: 0 auto; padding: 1.5rem; text-align: center;">
     <label style="color: #cccccc;"><i>To sign up, fill out the details below.</i></label><br><br>
     <label style="font-size: 18px;">Email</label><br>
-    <input id="email2" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@poch.mail</label><br><br>
+    <input id="email2" type="text" placeholder="username" style="border: none; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:20%"><label style="margin-left: 5px;">@absq.mail</label><br><br>
     <label style="font-size: 18px;">Password</label><br>
     <input id="pass2" type="password" placeholder="Password" style="border: none; margin-left: 10px; height: 25px; border-radius: 7px; background-color: #292929; padding: 5px; color: white; width:60%"><br><br>
     <button onclick="signIn()" style="border: none; border-radius: 5px; cursor: pointer; height: 40px; font-size: 15px; padding-left: 10px; padding-right: 10px; font-family: 'Red Hat Text'; color: white; background-color: #18ab44;">Log In</button>
@@ -85,7 +85,7 @@ alert("This email is taken!")
 .then(function(ret){
 
      console.log(ret)
-     window.location.href = "https://pochammail.github.io/email?inbox=" + ret.data.email
+     window.location.href = "https://absqmail.github.io/email?inbox=" + ret.data.email
     })
 
 });
@@ -109,7 +109,7 @@ alert("This email is taken!")
   }
   else{
    
-    window.location.href = "https://pochammail.github.io/email?inbox=" + ret.data.email
+    window.location.href = "https://absqmail.github.io/email?inbox=" + ret.data.email
   }
 })
 .catch(function(e){
